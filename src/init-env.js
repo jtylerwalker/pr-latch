@@ -29,7 +29,6 @@ class InitEnv {
   }
 
   handleAnswers(answers) {
-    //const answers = this._normalizePromptAnswers(answersRaw);
     const { projectDirectory, projectPort, projectAlias, additionalCommands, startCommand, concurrentProjects } = answers;
     const projects = {};
     projects[`${projectAlias}`] = {
@@ -122,7 +121,7 @@ class InitEnv {
 
   initializeProject() {
     const envPath = path.join(__dirname, '../prussia.env.json');
-    fs.existsSync(envPath) ?
+    return fs.existsSync(envPath) ?
       this.prompt([
         {
           type: 'list',

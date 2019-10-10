@@ -1,8 +1,8 @@
 const inquirer = require('inquirer');
-const { displayProjectValues, attachToProcess } = require("./cli-actions.js");
-const { prGitFlow, showAllLocalRepos } = require("./executor.js");
+const { prGitFlow } = require("./executor.js");
 const { fetchPulls } = require("./git-actions.js");
 const Spawner = require("./spawner.js");
+const InitEnv = require("./init-env.js");
 const env = require('../prussia.env.json');
 
 require('dotenv').config();
@@ -28,29 +28,42 @@ const showTitleBar = () => {
 	ui.updateBottomBar('new bottom bar content');
 }
 
-const { HOME } = process.env;
+const showSegueBar = () => {
+	var ui = new inquirer.ui.BottomBar();
+
+	ui.log.write(`\
+	----------------------------------------\
+	----------------------------------------\
+	`);
+	ui.log.write(`\
+	"Go forth and break something... " - Cy
+	`);
+	ui.log.write(`\
+	-----------------------------------------\
+	-----------------------------------------\
+	`);
+
+	ui.updateBottomBar('new bottom bar content');
+}
+
+const init = new InitEnv();
 
 const uiFork = new Spawner("Ui done loading", "3030");
 const edgeFork = new Spawner("Edge done loading", "8080");
 const authFork = new Spawner("Goggles done loading", "4040");
 
-const CODE_PATH = "example";
-const uiDir = `${CODE_PATH}/`;
-const edgeDir = `${CODE_PATH}/`;
+const uiDir = `${env["mainDirectory"]}/${env["projects"]["ui"]["projectDirectory"]}`;
+const edgeDir = `${env["mainDirectory"]}/${env["projects"]["edge"]["projectDirectory"]}`;
+console.warn(env)
 
-const viewLocalProjects = async () => {
-	let values = await showAllLocalRepos();
-	return displayProjectValues(values.filter(Boolean));
-}
+const autoReview = () => {
+	return new Promise(async (res) => {
+		const project = env["projects"]["ui"]["projectsDirectory"]
+		const { pull } = await fetchPulls(project);
 
-const autoReview = async () => {
-	const { project } = await viewLocalRepos();
-
-	showTitleBar();
-
-	const { pull } = await fetchPulls(project);
-
-	await prGitFlow(pull.branch);
+		await prGitFlow(pull.branch, uiDir);
+		res();
+	});
 }
 
 const pollForServerUp = spawn => {
@@ -64,16 +77,27 @@ const pollForServerUp = spawn => {
 	})
 }
 
-const generateEnvs = async () => {
-	edgeFork.spawnAndSpin('npm', ['run', 'dev'], edgeDir);
-	await pollForServerUp(edgeFork);
-	uiFork.spawnAndSpin('npm', ['run', 'dev'], uiDir);
-	await pollForServerUp(uiFork);
-	authFork.spawnAndSpin('npx', ['@ebsco/auth-goggles', '--config', `${HOME}/.auth-goggles.yaml`], `${HOME}`);
-	await pollForServerUp(authFork);
-
-	showTitleBar();
+const generateEnvs = () => {
+	return new Promise(async (res) => {
+		edgeFork.spawnAndSpin('npm', ['run', 'dev'], edgeDir);
+		await pollForServerUp(edgefork);
+		uiFork.spawnAndSpin('npm', ['run', 'dev'], uiDir);
+		await pollForServerUp(uifork);
+		authFork.spawnAndSpin('npx', ['@ebsco/auth-goggles', '--config', `${home}/.auth-goggles.yaml`], `${home}`);
+		await pollForServerUp(authfork);
+		res();
+	});
 }
 
-showTitleBar();
+const initialize = async () => {
+	showTitleBar();
+	await init.initializeProject();
+	showSegueBar();
+	await autoReview();
+	showSegueBar();
+	await generateEnvs();
+	showSegueBar();
+}
+
+initialize()
 // generateEnvs();
