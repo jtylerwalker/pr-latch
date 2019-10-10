@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const path = require("path");
+const env = require('../prussia.env.json');
 const { showAllLocalRepos } = require("./executor");
 const fs = require('fs');
 
@@ -29,21 +30,19 @@ class InitEnv {
 
   handleAnswers(answers) {
     //const answers = this._normalizePromptAnswers(answersRaw);
-    const { projectDirectory, projectAlias, additionalCommands, startCommand, concurrentProjects } = answers;
+    const { projectDirectory, projectPort, projectAlias, additionalCommands, startCommand, concurrentProjects } = answers;
     const projects = {};
     projects[`${projectAlias}`] = {
       "projectDirectory": `${this.configSettings.mainDirectory}/${projectDirectory}`,
       startCommand: startCommand.split(" "),
       additionalCommands: additionalCommands.split(" "),
+      projectPort: projectPort,
       concurrentProjects: concurrentProjects,
       concurrentProjectsAliases: []
     }
 
     this.configSettings.projects = Object.assign({}, this.configSettings.projects, projects);
-    projects[`${projectAlias}`].concurrentProjects ? this.promptForProjectSettings(true) : this._writeToEnvFile();
-  }
-
-  promptForMainDirectory() {
+    projects[`${projectAlias}`].concurrentProjects ? this.promptForProjectSettings(true, `${projectAlias}`) : this._writeToEnvFile();
   }
 
   _normalizeProjectValues(project) {
@@ -55,7 +54,7 @@ class InitEnv {
     }
   }
 
-  async promptForProjectSettings(concurrentProject = false) {
+  async promptForProjectSettings(isConcurrentProject = false, parentProjectAlias) {
     require('dotenv').config();
     const { PROJECTS_DIRECTORY } = process.env
     const projectsRaw = await showAllLocalRepos(PROJECTS_DIRECTORY);
@@ -87,19 +86,28 @@ class InitEnv {
         message: `  ${chalk.white.bold("Additional commands to run: ")}`,
       },
       {
+        type: 'input',
+        name: 'projectPort',
+        message: `  ${chalk.white.bold("What port does this project run on? ")}`,
+      },
+      {
         type: 'list',
         name: 'concurrentProjects',
         message: `  ${chalk.white.bold("Do you need to run a concurrent project? ")}`,
-        message: !concurrentProject ? `  ${chalk.white.bold("Would you like to run a concurrent project: ")}` :
+        message: !isConcurrentProject ?
+          `  ${chalk.white.bold("Do you need to run a concurrent project: ")}` :
           `  ${chalk.white.bold("Are there other concurrent projects you'd like to run: ")}`,
         choices: [{ name: "Yes", value: true }, { name: "Nope", value: false }]
       },
     ])
-      .then(answers => this.handleAnswers(answers))
+      .then(answers => {
+        isConcurrentProject && this.configSettings.projects[parentProjectAlias].concurrentProjectsAliases.push(answers["projectAlias"]);
+        this.handleAnswers(answers);
+      })
       .catch(err => err && console.warn(err));
   }
 
-  initializeProject() {
+  promptForMainProjectDirectory() {
     this.prompt([
       {
         type: 'input',
@@ -110,11 +118,21 @@ class InitEnv {
         this.configSettings.mainDirectory = answer["mainDirectory"]
         await this.promptForProjectSettings();
       });
+  }
 
+  initializeProject() {
+    const envPath = path.join(__dirname, '../prussia.env.json');
+    fs.existsSync(envPath) ?
+      this.prompt([
+        {
+          type: 'list',
+          name: 'mainDirectory',
+          message: `  ${chalk.white.bold("Main Projects directory: ")}`,
+          choices: ["ui", "edge"]
+        }]
+      ) :
+      this.promptForMainProjectDirectory();
   }
 }
 
 module.exports = InitEnv;
-
-const init = new InitEnv();
-init.initializeProject();

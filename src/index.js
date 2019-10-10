@@ -3,36 +3,42 @@ const { displayProjectValues, attachToProcess } = require("./cli-actions.js");
 const { prGitFlow, showAllLocalRepos } = require("./executor.js");
 const { fetchPulls } = require("./git-actions.js");
 const Spawner = require("./spawner.js");
+const env = require('../prussia.env.json');
 
 require('dotenv').config();
 
-const { HOME, EBSCO_UI_PATH, EBSCO_EDGE_PATH } = process.env;
-
-const showBottomBar = () => {
+const showTitleBar = () => {
 	var ui = new inquirer.ui.BottomBar();
 
 	ui.log.write(`\
-	------------------------\
+	----------------------------------------\
+	----------------------------------------\
 	`);
 	ui.log.write(`\
-	it's thursday. Go forth and break something... - Cy.\
+		___                          _        
+	| _ \  _ _   _  _   ___  ___ (_)  __ _ 
+	|  _/ | '_| | || | (_-< (_-< | | / _| |
+	|_|   |_|    \\_,_| /__/ /__/ |_| \\__,_|
 	`);
 	ui.log.write(`\
-	------------------------
+	-----------------------------------------\
+	-----------------------------------------\
 	`);
 
 	ui.updateBottomBar('new bottom bar content');
 }
 
+const { HOME } = process.env;
+
 const uiFork = new Spawner("Ui done loading", "3030");
 const edgeFork = new Spawner("Edge done loading", "8080");
 const authFork = new Spawner("Goggles done loading", "4040");
 
-const CODE_PATH = `${HOME}/Code`;
-const uiDir = `${CODE_PATH}/${EBSCO_UI_PATH}`;
-const edgeDir = `${CODE_PATH}/${EBSCO_EDGE_PATH}`;
+const CODE_PATH = "example";
+const uiDir = `${CODE_PATH}/`;
+const edgeDir = `${CODE_PATH}/`;
 
-const viewLocalRepos = async () => {
+const viewLocalProjects = async () => {
 	let values = await showAllLocalRepos();
 	return displayProjectValues(values.filter(Boolean));
 }
@@ -40,7 +46,7 @@ const viewLocalRepos = async () => {
 const autoReview = async () => {
 	const { project } = await viewLocalRepos();
 
-	showBottomBar();
+	showTitleBar();
 
 	const { pull } = await fetchPulls(project);
 
@@ -66,7 +72,8 @@ const generateEnvs = async () => {
 	authFork.spawnAndSpin('npx', ['@ebsco/auth-goggles', '--config', `${HOME}/.auth-goggles.yaml`], `${HOME}`);
 	await pollForServerUp(authFork);
 
-	showBottomBar();
+	showTitleBar();
 }
 
-generateEnvs();
+showTitleBar();
+// generateEnvs();
