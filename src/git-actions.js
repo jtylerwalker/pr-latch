@@ -51,16 +51,16 @@ const handleErr = err => {
 
 const fetchPulls = repo => {
 	const repoUrl = `${GITHUB_API}/repos/EBSCOIS/${repo}`;
-
+	console.warn(repoUrl)
 	return axios.get(`${repoUrl}/pulls`, {
-			headers: {
-				'Authorization': `token ${GITHUB_TOKEN}`,
-				'User-Agent': GITHUB_USERNAME,
-			}
-		})
+		headers: {
+			'Authorization': `token ${GITHUB_TOKEN}`,
+			'User-Agent': GITHUB_USERNAME,
+		}
+	})
 		.then((res) => selectPull(res.data))
 		.then((pull) => pull)
-		.catch((err) => handleErr(err) );
+		.catch((err) => handleErr(err));
 }
 
 module.exports = { fetchPulls };

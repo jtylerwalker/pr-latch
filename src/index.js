@@ -48,18 +48,14 @@ const showSegueBar = () => {
 
 const init = new InitEnv();
 
-const uiFork = new Spawner("Ui done loading", "3030");
-const edgeFork = new Spawner("Edge done loading", "8080");
-const authFork = new Spawner("Goggles done loading", "4040");
-
-const uiDir = `${env["mainDirectory"]}/${env["projects"]["ui"]["projectDirectory"]}`;
-const edgeDir = `${env["mainDirectory"]}/${env["projects"]["edge"]["projectDirectory"]}`;
-console.warn(env)
+const uiDir = `${env["projects"]["ui"]["projectDirectory"]}`;
+const edgeDir = `${env["projects"]["edge"]["projectDirectory"]}`;
 
 const autoReview = () => {
 	return new Promise(async (res) => {
-		const project = env["projects"]["ui"]["projectsDirectory"]
-		const { pull } = await fetchPulls(project);
+		const project = env["projects"]["ui"]["projectDirectory"]
+		const { pull } = await fetchPulls("discover.shared.ebsconext-ui").catch(err => console.warn(err));
+		console.warn(uiDir)
 
 		await prGitFlow(pull.branch, uiDir);
 		res();
@@ -78,24 +74,32 @@ const pollForServerUp = spawn => {
 }
 
 const generateEnvs = () => {
+	const uiFork = new Spawner("Ui done loading", "3030");
+	const edgeFork = new Spawner("Edge done loading", "8080");
+	const authFork = new Spawner("Goggles done loading", "4040");
+
 	return new Promise(async (res) => {
 		edgeFork.spawnAndSpin('npm', ['run', 'dev'], edgeDir);
-		await pollForServerUp(edgefork);
+		await pollForServerUp(edgeFork);
 		uiFork.spawnAndSpin('npm', ['run', 'dev'], uiDir);
-		await pollForServerUp(uifork);
+		await pollForServerUp(uiFork);
 		authFork.spawnAndSpin('npx', ['@ebsco/auth-goggles', '--config', `${home}/.auth-goggles.yaml`], `${home}`);
-		await pollForServerUp(authfork);
+		await pollForServerUp(authFork);
 		res();
 	});
 }
 
 const initialize = async () => {
+	console.clear();
 	showTitleBar();
 	await init.initializeProject();
+	console.clear();
 	showSegueBar();
 	await autoReview();
+	console.clear();
 	showSegueBar();
 	await generateEnvs();
+	console.clear();
 	showSegueBar();
 }
 
