@@ -1,10 +1,7 @@
-const path = require("path")
-const chalk = require('chalk');
 const inquirer = require('inquirer');
 const { displaySelectValues, attachToProcess } = require("./cli-actions.js");
 const { prGitFlow, showAllLocalRepos } = require("./executor.js");
 const { fetchPulls } = require("./git-actions.js");
-const util = require('util');
 const Spawner = require("./spawner.js");
 
 require('dotenv').config();

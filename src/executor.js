@@ -2,7 +2,6 @@ const path = require('path');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const chalk = require("chalk");
-const { spawn } = require('child_process');
 const logSymbols = require('log-symbols');
 const ora = require('ora');
 require('dotenv').config();
@@ -10,7 +9,6 @@ require('dotenv').config();
 ////// should be in ENV ////////
 const {EBSCO_UI_PATH, HOME} = process.env;
 const CODE_PATH = `${HOME}/Code`;
-const branch = "feature/DE41688-set-focus-in-cite-modal";
 
 const codeDir = `${CODE_PATH}/${EBSCO_UI_PATH}`;
 
