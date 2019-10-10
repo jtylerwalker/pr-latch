@@ -8,6 +8,7 @@ const normalizeProject = project => ({
 	`,
 	value: project
 })
+
 const selectProject = projects => projectPrompt([
 	{
 		type: 'list',
@@ -18,7 +19,7 @@ const selectProject = projects => projectPrompt([
 	}
 ]);
 
-const displaySelectValues = (values) => selectProject(values).then(projects => projects);
+const displayProjectValues = (values) => selectProject(values).then(projects => projects);
 
 const attachToProcess = () => {
 	const attachPrompt = inquirer.createPromptModule();
@@ -34,4 +35,4 @@ const attachToProcess = () => {
 	]);
 }
 
-module.exports = { displaySelectValues, attachToProcess };
+module.exports = { displayProjectValues, attachToProcess };

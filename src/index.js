@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { displaySelectValues, attachToProcess } = require("./cli-actions.js");
+const { displayProjectValues, attachToProcess } = require("./cli-actions.js");
 const { prGitFlow, showAllLocalRepos } = require("./executor.js");
 const { fetchPulls } = require("./git-actions.js");
 const Spawner = require("./spawner.js");
@@ -34,14 +34,14 @@ const edgeDir = `${CODE_PATH}/${EBSCO_EDGE_PATH}`;
 
 const viewLocalRepos = async () => {
 	let values = await showAllLocalRepos();
-	return displaySelectValues(values.filter(Boolean));
+	return displayProjectValues(values.filter(Boolean));
 }
 
 const autoReview = async () => {
 	const { project } = await viewLocalRepos();
 
 	showBottomBar();
-	
+
 	const { pull } = await fetchPulls(project);
 
 	await prGitFlow(pull.branch);
@@ -51,7 +51,7 @@ const pollForServerUp = spawn => {
 	return new Promise(async (res) => {
 		let isUp = false;
 
-		while(!isUp) {
+		while (!isUp) {
 			isUp = await spawn.pingServer();
 			isUp === true && res(spawn.serverUp(isUp));
 		}

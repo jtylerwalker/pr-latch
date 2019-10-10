@@ -7,14 +7,14 @@ const ora = require('ora');
 require('dotenv').config();
 
 ////// should be in ENV ////////
-const {EBSCO_UI_PATH, HOME} = process.env;
+const { EBSCO_UI_PATH, HOME } = process.env;
 const CODE_PATH = `${HOME}/Code`;
 
 const codeDir = `${CODE_PATH}/${EBSCO_UI_PATH}`;
 
 const stopSpinnerAndShowCheck = (spinner, loadingText, isError) => {
 	spinner.stop();
-	console.log(logSymbols.success, `	${chalk.cyan.bold(loadingText)}`);	
+	console.log(logSymbols.success, `	${chalk.cyan.bold(loadingText)}`);
 }
 
 const startSpinner = (loadingText) => ora(`	${chalk.white.bold(loadingText)}`).start();
@@ -25,8 +25,8 @@ const executor = (action, workingDir, loadingText, cb) => {
 		.catch(stderr => console.warn(stderr));
 }
 
-const showAllLocalRepos = async () => {
-	let { stdout } = await executor(`ls ${CODE_PATH}`, codeDir, "Which project would you like to check out?");
+const showAllLocalRepos = async mainProjectDirectory => {
+	let { stdout } = await executor(`ls ${mainProjectDirectory}`, mainProjectDirectory, "Which project would you like to check out?");
 
 	return stdout.split("\n");
 }

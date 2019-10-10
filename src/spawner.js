@@ -10,7 +10,7 @@ require('dotenv').config();
 class Spawner {
 	constructor(doneText, port) {
 		// instance vars
-		this.spinner = ora({prefixText: chalk.cyan.bold("	PRs are like a box of chocolates..."), spinner: "grenade"});
+		this.spinner = ora({ prefixText: chalk.cyan.bold("	PRs are like a box of chocolates..."), spinner: "grenade" });
 		this.port = port;
 		this.notify = new Notify("Local endpoint is ready", `Port ${port} is up and ready`, true);
 		this.pingInterval;
@@ -32,7 +32,7 @@ class Spawner {
 		if (connected) {
 			this.state = Object.assign({}, this.state, { success: true });
 			this.spinner.succeed(loadedText);
-			this.spinner.clear(); 
+			this.spinner.clear();
 			this.notify.init();
 
 			return { serverUp: true };
@@ -41,8 +41,8 @@ class Spawner {
 
 	pingServer() {
 		return exec(`curl -c1 --max-time 1 http://localhost:${this.port}`)
-			.then((data) => true )
-			.catch(err => false );
+			.then((data) => true)
+			.catch(err => false);
 	}
 
 	spawnAndSpin(action, opts, workingDir, cb) {
