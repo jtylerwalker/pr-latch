@@ -47,7 +47,7 @@ const showSegueBar = () => {
 }
 
 const init = new InitEnv();
-
+const { HOME } = process.env;
 const uiDir = `${env["projects"]["ui"]["projectDirectory"]}`;
 const edgeDir = `${env["projects"]["edge"]["projectDirectory"]}`;
 
@@ -83,7 +83,7 @@ const generateEnvs = () => {
 		await pollForServerUp(edgeFork);
 		uiFork.spawnAndSpin('npm', ['run', 'dev'], uiDir);
 		await pollForServerUp(uiFork);
-		authFork.spawnAndSpin('npx', ['@ebsco/auth-goggles', '--config', `${home}/.auth-goggles.yaml`], `${home}`);
+		authFork.spawnAndSpin('npx', ['@ebsco/auth-goggles', '--config', `${HOME}/.auth-goggles.yaml`], `${HOME}`);
 		await pollForServerUp(authFork);
 		res();
 	});
