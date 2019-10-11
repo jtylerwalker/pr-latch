@@ -4,7 +4,8 @@
   "description": "automate pr review workflow",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --format"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,12 @@
     "yargs": "^14.0.0"
   },
   "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-promise": "^4.2.1",
     "jest": "^24.9.0",
     "prettier": "^1.18.2"
   }
