@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const path = require("path");
-const env = require("../prussia.env.json");
+const env = require("../pr-latch.env.json");
 const { showAllLocalRepos } = require("./executor");
 const fs = require("fs");
 
@@ -22,18 +22,18 @@ class InitEnv {
   }
 
   _writeToEnvFile() {
-    const envPath = path.join(__dirname, "../prussia.env.json");
+    const envPath = path.join(__dirname, "../pr-latch.env.json");
     fs.existsSync(envPath)
       ? fs.writeFile(
-          envPath,
-          JSON.stringify(this.configSettings),
-          err => err && console.log(err)
-        )
+        envPath,
+        JSON.stringify(this.configSettings),
+        err => err && console.log(err)
+      )
       : fs.appendFile(
-          envPath,
-          JSON.stringify(this.configSettings),
-          err => err && console.log(err)
-        );
+        envPath,
+        JSON.stringify(this.configSettings),
+        err => err && console.log(err)
+      );
   }
 
   handleAnswers(answers) {
@@ -123,8 +123,8 @@ class InitEnv {
         message: !isConcurrentProject
           ? `  ${chalk.white.bold("Do you need to run a concurrent project: ")}`
           : `  ${chalk.white.bold(
-              "Are there other concurrent projects you'd like to run: "
-            )}`,
+            "Are there other concurrent projects you'd like to run: "
+          )}`,
         choices: [{ name: "Yes", value: true }, { name: "Nope", value: false }]
       }
     ])
@@ -152,16 +152,16 @@ class InitEnv {
   }
 
   initializeProject() {
-    const envPath = path.join(__dirname, "../prussia.env.json");
+    const envPath = path.join(__dirname, "../pr-latch.env.json");
     return fs.existsSync(envPath)
       ? this.prompt([
-          {
-            type: "list",
-            name: "mainDirectory",
-            message: `  ${chalk.white.bold("Main Projects directory: ")}`,
-            choices: ["ui", "edge"]
-          }
-        ])
+        {
+          type: "list",
+          name: "mainDirectory",
+          message: `  ${chalk.white.bold("Main Projects directory: ")}`,
+          choices: ["ui", "edge"]
+        }
+      ])
       : this.promptForMainProjectDirectory();
   }
 }

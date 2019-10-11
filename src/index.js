@@ -3,7 +3,7 @@ const { prGitFlow } = require("./executor.js");
 const { fetchPulls } = require("./git-actions.js");
 const Spawner = require("./spawner.js");
 const InitEnv = require("./init-env.js");
-const env = require("../prussia.env.json");
+const env = require("../pr-latch.env.json");
 
 require("dotenv").config();
 
@@ -12,7 +12,7 @@ const showTitleBar = () => {
 
   ui.log.write(
     `----------------------------------------` +
-      `----------------------------------------`
+    `----------------------------------------`
   );
   ui.log.write(`\
 		___                          _

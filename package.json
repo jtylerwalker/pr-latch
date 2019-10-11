@@ -1,5 +1,5 @@
 {
-  "name": "prussia",
+  "name": "pr-latch",
   "version": "0.0.1",
   "description": "automate pr review workflow",
   "main": "src/index.js",
