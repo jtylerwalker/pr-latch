@@ -70,12 +70,12 @@ const autoReview = () => {
 };
 
 const pollForServerUp = spawn => {
-  return new Promise(async res => {
+  return new Promise(async (resolve, reject) => {
     let isUp = false;
 
     while (!isUp) {
       isUp = await spawn.pingServer();
-      isUp === true && res(spawn.serverUp(isUp));
+      isUp === true && resolve(spawn.serverUp(isUp));
     }
   });
 };
@@ -96,7 +96,7 @@ const generateEnvs = () => {
       `${HOME}`
     );
     await pollForServerUp(authFork);
-    res();
+    resolve();
   });
 };
 
@@ -115,4 +115,3 @@ const initialize = async () => {
 };
 
 initialize();
-// generateEnvs();
