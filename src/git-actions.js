@@ -1,7 +1,6 @@
 const axios = require("axios");
 const chalk = require("chalk");
 const inquirer = require("inquirer");
-
 require("dotenv").config();
 
 const normalizePull = pull => ({
@@ -21,7 +20,6 @@ const normalizePull = pull => ({
   }
 });
 
-const { GITHUB_TOKEN, GITHUB_API, GITHUB_USERNAME } = process.env;
 const pullPrompt = inquirer.createPromptModule();
 const selectPull = pulls =>
   pullPrompt([
@@ -53,8 +51,9 @@ const handleErr = err => {
 };
 
 const fetchPulls = repo => {
+  const { GITHUB_TOKEN, GITHUB_API, GITHUB_USERNAME } = process.env;
   const repoUrl = `${GITHUB_API}/repos/EBSCOIS/${repo}`;
-  console.warn(repoUrl);
+
   return axios
     .get(`${repoUrl}/pulls`, {
       headers: {

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const inquirer = require("inquirer");
 const { prGitFlow } = require("./executor.js");
 const { fetchPulls } = require("./git-actions.js");
@@ -15,10 +17,12 @@ const showTitleBar = () => {
     `----------------------------------------`
   );
   ui.log.write(`\
-		___                          _
-	| _ \  _ _   _  _   ___  ___(_)  __ _
-	| _ / | '_| | || | (_-< (_-< | | / _| |
-	| _ |   | _ |    \\_, _ | /__/ / __ / | _ | \\__, _ |
+    #####  #####        #        ##   #####  ####  #    # 
+  #    # #    #       #       #  #    #   #    # #    # 
+  #    # #    # ##### #      #    #   #   #      ###### 
+  #####  #####        #      ######   #   #      #    # 
+  #      #   #        #      #    #   #   #    # #    # 
+  #      #    #       ###### #    #   #    ####  #    # 
 `);
   ui.log.write(
     "\
@@ -48,8 +52,6 @@ const showSegueBar = () => {
 	-----------------------------------------\
 	"
   );
-
-  ui.updateBottomBar("new bottom bar content");
 };
 
 const init = new InitEnv();
@@ -60,9 +62,10 @@ const edgeDir = `${env.projects.edge.projectDirectory}`;
 const autoReview = () => {
   return new Promise(async res => {
     const project = env.projects.ui.projectDirectory;
-    const { pull } = await fetchPulls("discover.shared.ebsconext-ui").catch(
-      err => console.warn(err)
-    );
+    const { pull } = await fetchPulls("discover.shared.ebsconext-ui")
+      .catch(
+        err => console.warn(err)
+      );
 
     await prGitFlow(pull.branch, uiDir);
     res();
@@ -109,9 +112,21 @@ const initialize = async () => {
   await autoReview();
   console.clear();
   showSegueBar();
+};
+
+const startLocalEnv = async () => {
   await generateEnvs();
   console.clear();
   showSegueBar();
 };
 
+setTimeoutCurl = (count) => {
+  console.log(count)
+  count >= 0 && setTimeout(function () {
+    setTimeoutCurl(count - 1);
+    return console.log("hello")
+  }, 2000)
+}
+
 initialize();
+//setTimeoutCurl(20);
