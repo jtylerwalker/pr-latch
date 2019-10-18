@@ -1,25 +1,10 @@
-#!/usr/bin/env node
-
 const inquirer = require("inquirer");
-const { prGitFlow } = require("./executor.js");
-const { fetchPulls } = require("./git-actions.js");
-const Spawner = require("./spawner.js");
-const InitEnv = require("./init-env.js");
+const { prGitFlow } = require("../lib/executor.js.js");
+const { fetchPulls } = require("../lib/git-actions.js.js");
+const Spawner = require("../lib/spawner.js.js");
+const InitEnv = require("../lib/init-env.js.js");
 const env = require("../pr-latch.env.json");
 require("dotenv").config();
-
-// generate new env
-// directory, alias, project dir, start command, port
-
-// prs using alias
-// open browser to pr
-// latch review ui
-
-// env start with aliases
-// ex: latch env-up edge ui auth
-
-// env kill with aliases
-// ex: latch env-kill [pids?]
 
 const init = new InitEnv();
 const { HOME } = process.env;
@@ -28,7 +13,6 @@ const edgeDir = `${env.projects.edge.projectDirectory}`;
 
 const autoReview = () => {
   return new Promise(async res => {
-    const project = env.projects.ui.projectDirectory;
     const { pull } = await fetchPulls("discover.shared.ebsconext-ui").catch(
       err => console.warn(err)
     );
