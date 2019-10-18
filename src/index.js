@@ -6,53 +6,20 @@ const { fetchPulls } = require("./git-actions.js");
 const Spawner = require("./spawner.js");
 const InitEnv = require("./init-env.js");
 const env = require("../pr-latch.env.json");
-
 require("dotenv").config();
 
-const showTitleBar = () => {
-  var ui = new inquirer.ui.BottomBar();
+// generate new env
+// directory, alias, project dir, start command, port
 
-  ui.log.write(
-    `----------------------------------------` +
-    `----------------------------------------`
-  );
-  ui.log.write(`\
-    #####  #####        #        ##   #####  ####  #    # 
-  #    # #    #       #       #  #    #   #    # #    # 
-  #    # #    # ##### #      #    #   #   #      ###### 
-  #####  #####        #      ######   #   #      #    # 
-  #      #   #        #      #    #   #   #    # #    # 
-  #      #    #       ###### #    #   #    ####  #    # 
-`);
-  ui.log.write(
-    "\
-	-----------------------------------------\
-	-----------------------------------------\
-	"
-  );
+// prs using alias
+// open browser to pr
+// latch review ui
 
-  ui.updateBottomBar("new bottom bar content");
-};
+// env start with aliases
+// ex: latch env-up edge ui auth
 
-const showSegueBar = () => {
-  var ui = new inquirer.ui.BottomBar();
-
-  ui.log.write(
-    "\
-	----------------------------------------\
-	----------------------------------------\
-	"
-  );
-  ui.log.write(`\
-		"Go forth and break something... " - Cy
-			`);
-  ui.log.write(
-    "\
-	-----------------------------------------\
-	-----------------------------------------\
-	"
-  );
-};
+// env kill with aliases
+// ex: latch env-kill [pids?]
 
 const init = new InitEnv();
 const { HOME } = process.env;
@@ -62,10 +29,9 @@ const edgeDir = `${env.projects.edge.projectDirectory}`;
 const autoReview = () => {
   return new Promise(async res => {
     const project = env.projects.ui.projectDirectory;
-    const { pull } = await fetchPulls("discover.shared.ebsconext-ui")
-      .catch(
-        err => console.warn(err)
-      );
+    const { pull } = await fetchPulls("discover.shared.ebsconext-ui").catch(
+      err => console.warn(err)
+    );
 
     await prGitFlow(pull.branch, uiDir);
     res();
@@ -120,13 +86,20 @@ const startLocalEnv = async () => {
   showSegueBar();
 };
 
-setTimeoutCurl = (count) => {
-  console.log(count)
-  count >= 0 && setTimeout(function () {
-    setTimeoutCurl(count - 1);
-    return console.log("hello")
-  }, 2000)
-}
+setTimeoutCurl = count => {
+  console.log(count);
+  count >= 0 &&
+    setTimeout(function() {
+      setTimeoutCurl(count - 1);
+      return console.log("hello");
+    }, 2000);
+};
 
-initialize();
-//setTimeoutCurl(20);
+const program = require("commander");
+program.version("0.0.1");
+
+program.parse(process.argv);
+const [, , ...args] = process.argv;
+
+if (args[0] == "new" && args[1] == "env") init.promptForProjectSettings();
+if (program.debug) console.log(program.opts());

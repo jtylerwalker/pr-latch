@@ -25,15 +25,15 @@ class InitEnv {
     const envPath = path.join(__dirname, "../pr-latch.env.json");
     fs.existsSync(envPath)
       ? fs.writeFile(
-        envPath,
-        JSON.stringify(this.configSettings),
-        err => err && console.log(err)
-      )
+          envPath,
+          JSON.stringify(this.configSettings),
+          err => err && console.log(err)
+        )
       : fs.appendFile(
-        envPath,
-        JSON.stringify(this.configSettings),
-        err => err && console.log(err)
-      );
+          envPath,
+          JSON.stringify(this.configSettings),
+          err => err && console.log(err)
+        );
   }
 
   handleAnswers(answers) {
@@ -41,18 +41,13 @@ class InitEnv {
       projectDirectory,
       projectPort,
       projectAlias,
-      additionalCommands,
-      startCommand,
-      concurrentProjects
+      startCommand
     } = answers;
     const projects = {};
     projects[`${projectAlias}`] = {
       projectDirectory: `${this.configSettings.mainDirectory}/${projectDirectory}`,
       startCommand: startCommand.split(" "),
-      additionalCommands: additionalCommands.split(" "),
-      projectPort: projectPort,
-      concurrentProjects: concurrentProjects,
-      concurrentProjectsAliases: []
+      projectPort: projectPort
     };
 
     this.configSettings.projects = Object.assign(
@@ -79,55 +74,14 @@ class InitEnv {
     parentProjectAlias
   ) {
     require("dotenv").config();
-    const { PROJECTS_DIRECTORY } = process.env;
-    const projectsRaw = await showAllLocalRepos(PROJECTS_DIRECTORY);
+    const { CODE_DIRECTORY } = process.env;
+    console.warn(process.env);
+    const projectsRaw = await showAllLocalRepos(CODE_DIRECTORY);
 
     const projects = this._normalizeProjectValues(projectsRaw);
 
-    this.prompt([
-      {
-        type: "list",
-        name: "projectDirectory",
-        pageSize: 40,
-        message: `  ${chalk.white.bold(
-          "Which project would you like to define?"
-        )}`,
-        choices: projects.value
-      },
-      {
-        type: "input",
-        name: "projectAlias",
-        pageSize: 40,
-        message: `  ${chalk.white.bold(
-          "What is a good alias for this project? "
-        )}`
-      },
-      {
-        type: "input",
-        name: "startCommand",
-        message: `  ${chalk.white.bold("Start command: ")}`
-      },
-      {
-        type: "input",
-        name: "additionalCommands",
-        message: `  ${chalk.white.bold("Additional commands to run: ")}`
-      },
-      {
-        type: "input",
-        name: "projectPort",
-        message: `  ${chalk.white.bold("What port does this project run on? ")}`
-      },
-      {
-        type: "list",
-        name: "concurrentProjects",
-        message: !isConcurrentProject
-          ? `  ${chalk.white.bold("Do you need to run a concurrent project: ")}`
-          : `  ${chalk.white.bold(
-            "Are there other concurrent projects you'd like to run: "
-          )}`,
-        choices: [{ name: "Yes", value: true }, { name: "Nope", value: false }]
-      }
-    ])
+    // directory, alias, project dir, start command, port
+    this.prompt([])
       .then(answers => {
         isConcurrentProject &&
           this.configSettings.projects[
@@ -154,14 +108,7 @@ class InitEnv {
   initializeProject() {
     const envPath = path.join(__dirname, "../pr-latch.env.json");
     return fs.existsSync(envPath)
-      ? this.prompt([
-        {
-          type: "list",
-          name: "mainDirectory",
-          message: `  ${chalk.white.bold("Main Projects directory: ")}`,
-          choices: ["ui", "edge"]
-        }
-      ])
+      ? this.prompt([])
       : this.promptForMainProjectDirectory();
   }
 }
