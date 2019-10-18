@@ -2,7 +2,7 @@
   "name": "pr-latch",
   "version": "0.0.1",
   "description": "automate pr review workflow",
-  "main": "src/index.js",
+  "main": "src/main.js",
   "scripts": {
     "test": "jest",
     "format": "prettier --format"
