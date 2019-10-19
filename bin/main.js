@@ -2,6 +2,8 @@
 const Prompts = require("../lib/prompts/prompts");
 const program = require("commander");
 const InitEnv = require("../lib/init-env");
+const { fetchPulls } = require("../lib/git-actions");
+const { prGitFlow } = require("../lib/executor");
 
 require("dotenv").config();
 
@@ -21,10 +23,9 @@ program
 // generate new env
 // directory, alias, project dir, start command, port
 program
-  .command("new") // sub-command name
-  .alias("n") // alternative sub-command is `al`
-  .description("Create a new environment") // command description
-  // function to execute when command is uses
+  .command("new")
+  .alias("n")
+  .description("Create a new environment")
   .action(() => {
     const init = new InitEnv();
     const env = require("../.latch.env.json");
@@ -38,6 +39,22 @@ program
 // prs using alias
 // open browser to pr
 // latch review ui
+const parseAlias = alias => {
+  return new Promise(async res => {
+    const { projects } = require("../.latch.env.json");
+    const { pull } = await fetchPulls(projects[`${alias}`].projectName).catch(
+      err => console.warn(err)
+    );
+
+    await prGitFlow(pull.branch, projects[`${alias}`].projectDirectory);
+    res();
+  });
+};
+
+program
+  .option("review, <string>", "project alias", parseAlias)
+  .alias("r")
+  .description("View PR's for project");
 
 // TODO:
 // env start with aliases
