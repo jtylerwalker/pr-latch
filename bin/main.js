@@ -17,9 +17,9 @@ console.warn(projects);
  * Commander: List env projects
  */
 const listEnvs = () => Prompts.static.list(env.projects);
+
 program
   .option("env, list", "list envs", listEnvs)
-  .alias("ls")
   .description("List current environments");
 
 // TODO: delete envs
@@ -35,6 +35,7 @@ const newEnv = () => {
     ? init.promptForProjectSettings(env.mainDirectory)
     : init.promptForMainProjectDirectory();
 };
+
 program
   .option("env, new", "list envs", newEnv)
   .description("Create a new environment");
@@ -56,7 +57,6 @@ const parseAlias = alias => {
 
 program
   .option("review, <string>", "project alias", parseAlias)
-  .alias("r")
   .description("View PR's for project");
 
 // TODO:
