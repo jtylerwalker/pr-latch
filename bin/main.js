@@ -4,49 +4,49 @@ const program = require("commander");
 const InitEnv = require("../lib/init-env");
 const { fetchPulls } = require("../lib/git-actions");
 const { prGitFlow } = require("../lib/executor");
+const env = require("../.latch.env.json");
 
 require("dotenv").config();
 
 program.version("0.0.1");
-// list envs
+
+/**
+ * Commander: List env projects
+ */
+const listEnvs = () => Prompts.static.list(env.projects);
+program
+  .option("env, list", "list envs", listEnvs)
+  .alias("ls")
+  .description("List current environments");
+
 // TODO: delete envs
 // TODO: update envs
+
+/**
+ * Commander: Generate new env project
+ */
+const newEnv = () => {
+  const init = new InitEnv();
+
+  env.mainDirectory
+    ? init.promptForProjectSettings(env.mainDirectory)
+    : init.promptForMainProjectDirectory();
+};
 program
-  .command("list")
-  .alias("ls")
-  .description("List current environments")
-  .action(() => {
-    const env = require("../.latch.env.json");
-    Prompts.static.list(env.projects);
-  });
+  .option("env, new", "list envs", newEnv)
+  .description("Create a new environment");
 
-// generate new env
-// directory, alias, project dir, start command, port
-program
-  .command("new")
-  .alias("n")
-  .description("Create a new environment")
-  .action(() => {
-    const init = new InitEnv();
-    const env = require("../.latch.env.json");
-
-    env.mainDirectory
-      ? init.promptForProjectSettings(env.mainDirectory)
-      : init.promptForMainProjectDirectory();
-  });
-
-// TODO:
-// prs using alias
-// open browser to pr
-// latch review ui
+/**
+ * @param {String} alias
+ * Commander: PR review flow for stipulated env
+ */
 const parseAlias = alias => {
   return new Promise(async res => {
-    const { projects } = require("../.latch.env.json");
-    const { pull } = await fetchPulls(projects[`${alias}`].projectName).catch(
-      err => console.warn(err)
-    );
+    const { pull } = await fetchPulls(
+      env.projects[`${alias}`].projectName
+    ).catch(err => console.warn(err));
 
-    await prGitFlow(pull.branch, projects[`${alias}`].projectDirectory);
+    await prGitFlow(pull.branch, env.projects[`${alias}`].projectDirectory);
     res();
   });
 };
@@ -64,5 +64,4 @@ program
 // env kill with aliases
 // ex: latch env-kill [pids?]
 
-// allow commander to parse `process.argv`
 program.parse(process.argv);
