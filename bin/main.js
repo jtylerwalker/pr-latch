@@ -10,6 +10,9 @@ require("dotenv").config();
 
 program.version("0.0.1");
 
+const { ui, ...projects } = env.projects;
+console.warn(projects);
+
 /**
  * Commander: List env projects
  */
