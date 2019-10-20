@@ -4,7 +4,6 @@ const program = require("commander");
 const { fetchPulls } = require("../lib/git-actions");
 const { getEnvPids, prGitFlow, stopActivePorts } = require("../lib/executor");
 const env = require("../.latchrc.json");
-const Spawner = require("../lib/spawner");
 
 require("dotenv").config();
 
@@ -30,13 +29,14 @@ const parseAlias = alias => {
   });
 };
 
-const pollForServerUp = spawn => {
+const pollForServerUp = (spawn, port, alias) => {
   return new Promise(async (res, _) => {
+    const hasLoadedText = `${alias.toUpperCase()} up and ready`;
     let isUp = false;
 
     while (!isUp) {
-      isUp = await spawn.pingServer();
-      isUp === true && res(spawn.serverUp(isUp));
+      isUp = await spawn.pingServer(port);
+      isUp === true && res(spawn.serverUp(isUp, port, hasLoadedText));
     }
   });
 };
@@ -47,16 +47,16 @@ const pollForServerUp = spawn => {
  */
 const startEnvironment = alias => {
   const { port, directory, startCommand } = env.projects[`${alias}`];
-  const projectFork = new Spawner(`${alias.toUpperCase()} up and ready`, port);
+  const projectSpawn = require("../lib/spawner");
 
   return new Promise(async (res, _) => {
-    projectFork.spawnAndSpin(
+    projectSpawn.spawnAndSpin(
       `${startCommand[0]}`,
       startCommand.slice(1),
       directory
     );
 
-    await pollForServerUp(projectFork);
+    await pollForServerUp(projectSpawn, port, alias);
 
     res({ hasLoaded: true });
   });
