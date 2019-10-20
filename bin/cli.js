@@ -53,7 +53,8 @@ const startEnvironment = alias => {
     projectSpawn.spawnAndSpin(
       `${startCommand[0]}`,
       startCommand.slice(1),
-      directory
+      directory,
+      port
     );
 
     await pollForServerUp(projectSpawn, port, alias);

@@ -21,6 +21,7 @@
     "log-symbols": "^3.0.0",
     "node-notifier": "^6.0.0",
     "ora": "^4.0.2",
+    "spinnies": "^0.5.0",
     "yargs": "^14.0.0"
   },
   "devDependencies": {

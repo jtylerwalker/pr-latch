@@ -1,1 +1,24 @@
-{"mainDirectory":"/Users/employee/Code","projects":{"edge":{"directory":"/Users/employee/Code/discover.shared.ebsconext-edge","name":"discover.shared.ebsconext-edge","startCommand":["npm","run","dev"],"port":"8080"},"components":{"directory":"/Users/employee/Code/discover.shared.ebsco-ui-components","name":"discover.shared.ebsco-ui-components","startCommand":["npm","run","storybook"],"port":"6001"},"ui":{"directory":"/Users/employee/Code/discover.shared.ebsconext-ui","name":"discover.shared.ebsconext-ui","startCommand":["npm","run","dev"],"port":"3030"}},"activePorts":["6001","8080"]}
+{
+  "mainDirectory": "/Users/employee/Code",
+  "projects": {
+    "edge": {
+      "directory": "/Users/employee/Code/discover.shared.ebsconext-edge",
+      "name": "discover.shared.ebsconext-edge",
+      "startCommand": ["npm", "run", "dev"],
+      "port": "8080"
+    },
+    "components": {
+      "directory": "/Users/employee/Code/discover.shared.ebsco-ui-components",
+      "name": "discover.shared.ebsco-ui-components",
+      "startCommand": ["npm", "run", "storybook"],
+      "port": "6001"
+    },
+    "ui": {
+      "directory": "/Users/employee/Code/discover.shared.ebsconext-ui",
+      "name": "discover.shared.ebsconext-ui",
+      "startCommand": ["npm", "run", "dev"],
+      "port": "3030"
+    }
+  },
+  "activePorts": ["6001", "8080"]
+}
