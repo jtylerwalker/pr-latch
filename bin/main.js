@@ -3,7 +3,7 @@ const Prompts = require("../lib/prompts/prompts");
 const program = require("commander");
 const LatchEnv = require("../lib/init-env");
 const { fetchPulls } = require("../lib/git-actions");
-const { prGitFlow } = require("../lib/executor");
+const { getEnvPids, prGitFlow, stopActivePorts } = require("../lib/executor");
 const env = require("../.latchrc.json");
 const Spawner = require("../lib/spawner");
 
@@ -87,10 +87,12 @@ const startEnvironment = alias => {
   });
 };
 
-const envsUp = async aliases => {
-  return Promise.all(aliases.map(async a => await startEnvironment(a))).then(
-    () => process.exit(1)
+const envsUp = aliases => {
+  const init = new LatchEnv();
+  Promise.all(aliases.map(async a => await startEnvironment(a))).then(() =>
+    process.exit(1)
   );
+  init.aggregateEnvPids(aliases.map(a => env.projects[`${a}`].port));
 };
 
 program
@@ -98,8 +100,23 @@ program
   .description("View PR's for project")
   .action(envsUp);
 
-// TODO:
-// env kill with aliases
-// ex: latch env-kill [pids?]
+const envsDown = async () => {
+  const init = new LatchEnv();
+  return Promise.all(
+    env.activePorts.map(async p => await getEnvPids(p, env))
+  ).then(std => {
+    const pids = std.reduce(
+      (acc, { stdout }) => acc.concat(stdout.split("\n")).filter(Boolean),
+      []
+    );
+    stopActivePorts(pids, env.mainDirectory);
+    init.clearEnvPids();
+  });
+};
+
+program
+  .command("envdown")
+  .description("View PR's for project")
+  .action(envsDown);
 
 program.parse(process.argv);
