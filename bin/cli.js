@@ -2,11 +2,11 @@ const inquirer = require("inquirer");
 const { prGitFlow } = require("../lib/executor.js.js");
 const { fetchPulls } = require("../lib/git-actions.js.js");
 const Spawner = require("../lib/spawner.js.js");
-const InitEnv = require("../lib/init-env.js.js");
+const LatchEnv = require("../lib/init-env.js.js");
 const env = require("../pr-latch.env.json");
 require("dotenv").config();
 
-const init = new InitEnv();
+const init = new LatchEnv();
 const { HOME } = process.env;
 const uiDir = `${env.projects.ui.projectDirectory}`;
 const edgeDir = `${env.projects.edge.projectDirectory}`;
