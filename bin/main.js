@@ -4,7 +4,7 @@ const program = require("commander");
 const LatchEnv = require("../lib/init-env");
 const { fetchPulls } = require("../lib/git-actions");
 const { prGitFlow } = require("../lib/executor");
-const env = require("../.latch.env.json");
+const env = require("../.latchrc.json");
 const Spawner = require("../lib/spawner");
 
 require("dotenv").config();
