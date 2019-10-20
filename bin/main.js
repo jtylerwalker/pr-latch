@@ -15,27 +15,6 @@ program.version("0.0.1");
  * Commander: List env projects
  */
 const listEnvs = () => Prompts.static.list(env.projects);
-program
-  .option("env, list", "list envs", listEnvs)
-  .description("List current environments");
-
-// TODO: delete envs
-//const { ui, ...projects } = env.projects;
-//console.warn(projects);
-
-/**
- * Commander: Generate new env project
- */
-const newEnv = () => {
-  const init = new LatchEnv();
-
-  env.mainDirectory
-    ? init.promptForProjectSettings(env.mainDirectory)
-    : init.promptForMainProjectDirectory();
-};
-program
-  .option("env, new", "create new environment", newEnv)
-  .description("Create a new environment");
 
 /**
  * @param {String} alias
@@ -51,9 +30,6 @@ const parseAlias = alias => {
     res();
   });
 };
-program
-  .option("review, <string>", "project alias", parseAlias)
-  .description("View PR's for project");
 
 const pollForServerUp = spawn => {
   return new Promise(async (res, _) => {
@@ -87,7 +63,23 @@ const startEnvironment = alias => {
   });
 };
 
+/**
+ * Commander: Generate new env project
+ */
+const envNew = () => {
+  const init = new LatchEnv();
+
+  env.mainDirectory
+    ? init.promptForProjectSettings(env.mainDirectory)
+    : init.promptForMainProjectDirectory();
+};
+
+/**
+ * start envs
+ * @param {[String]} aliases
+ */
 const envsUp = aliases => {
+  console.warn(aliases);
   const init = new LatchEnv();
   Promise.all(aliases.map(async a => await startEnvironment(a))).then(() =>
     process.exit(1)
@@ -95,11 +87,9 @@ const envsUp = aliases => {
   init.aggregateEnvPids(aliases.map(a => env.projects[`${a}`].port));
 };
 
-program
-  .command("envup [aliases...]")
-  .description("View PR's for project")
-  .action(envsUp);
-
+/**
+ * stop processes associated with running envs
+ */
 const envsDown = async () => {
   const init = new LatchEnv();
   return Promise.all(
@@ -114,9 +104,10 @@ const envsDown = async () => {
   });
 };
 
-program
-  .command("envdown")
-  .description("View PR's for project")
-  .action(envsDown);
+program.command("env-up [aliases...]").action(envsUp);
+program.command("env-down").action(envsDown);
+program.command("env-new").action(envNew);
+program.command("list").action(listEnvs);
+program.command("review <alias>").action(parseAlias);
 
 program.parse(process.argv);
