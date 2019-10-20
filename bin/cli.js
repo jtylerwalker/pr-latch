@@ -1,9 +1,9 @@
-const inquirer = require("inquirer");
-const { prGitFlow } = require("../lib/executor.js.js");
 const { fetchPulls } = require("../lib/git-actions.js.js");
-const Spawner = require("../lib/spawner.js.js");
-const LatchEnv = require("../lib/init-env.js.js");
+const { prGitFlow } = require("../lib/executor.js.js");
 const env = require("../pr-latch.env.json");
+const inquirer = require("inquirer");
+const LatchEnv = require("../lib/init-env.js.js");
+const Spawner = require("../lib/spawner.js.js");
 require("dotenv").config();
 
 const init = new LatchEnv();
