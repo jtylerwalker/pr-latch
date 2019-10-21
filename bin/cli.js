@@ -9,6 +9,10 @@ const {
   parseAlias
 } = require("../lib/init");
 
+// TODO: empty args list
+// TODO: options
+// TODO:
+
 program.version("0.0.1");
 
 program.command("env-up [aliases...]").action(aliases => {
