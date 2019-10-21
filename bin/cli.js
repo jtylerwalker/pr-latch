@@ -11,7 +11,7 @@ const {
 
 // TODO: empty args list
 // TODO: options
-// TODO:
+// TODO: Generate .env file for gitub token and username
 
 program.version("0.0.1");
 
