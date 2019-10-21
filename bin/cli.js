@@ -26,7 +26,15 @@ program.command("env-new").action(() => {
   Prompts.static.title();
   envNew();
 });
-program.command("list").action(listEnvs);
-program.command("review <alias>").action(parseAlias);
+program.command("list").action(() => {
+  Prompts.static.segue();
+  listEnvs();
+});
+program.command("review <alias>").action(alias => {
+  console.clear();
+  Prompts.static.title();
+  Prompts.static.lineBreak();
+  parseAlias(alias);
+});
 
 program.parse(process.argv);
