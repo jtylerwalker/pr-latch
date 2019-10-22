@@ -1,13 +1,13 @@
 {
   "name": "pr-latch",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "automate pr review workflow",
   "main": "src/main.js",
   "scripts": {
     "test": "jest",
     "format": "prettier --format"
   },
-  "author": "",
+  "author": "Tyler Walker",
   "license": "ISC",
   "bin": {
     "latch": "./bin/cli.js"

@@ -30,7 +30,7 @@ program
       process.exit(1);
     }
 
-    Prompts.static.title((noSeparator = true));
+    Prompts.static.title();
     initializeEnv().then(() => {
       console.log(`\n| ${chalk.white.bold(Prompts.static.quotes[1])}`);
       process.exit(1);
@@ -64,7 +64,6 @@ program
 program
   .command("list")
   .action(() => {
-    Prompts.static.segue();
     listEnvs();
   })
   .description("lists all projects in .latchrc.json");
