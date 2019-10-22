@@ -15,7 +15,6 @@ const {
 
 // TODO: empty args list
 // TODO: options
-// TODO: Generate .env file for gitub token and username
 
 program.version("0.0.1");
 
@@ -35,30 +34,45 @@ program.command("init").action(async () => {
   );
   initializeEnv().then(() => process.exit(1));
 });
-program.command("env-up [aliases...]").action(aliases => {
-  console.clear();
-  Prompts.static.segue();
-  envsUp(aliases);
-});
-program.command("env-down").action(() => {
-  console.clear();
-  Prompts.static.segue();
-  envsDown();
-});
-program.command("env-new").action(() => {
-  console.clear();
-  Prompts.static.title();
-  envNew();
-});
-program.command("list").action(() => {
-  Prompts.static.segue();
-  listEnvs();
-});
-program.command("review <alias>").action(alias => {
-  console.clear();
-  Prompts.static.title();
-  Prompts.static.lineBreak();
-  parseAlias(alias);
-});
+program
+  .command("env-up [project-aliases...]")
+  .action(aliases => {
+    console.clear();
+    Prompts.static.segue();
+    envsUp(aliases);
+  })
+  .description("starts the server for each project alias stipulated");
+program
+  .command("env-down")
+  .action(() => {
+    console.clear();
+    Prompts.static.segue();
+    envsDown();
+  })
+  .description("stops all project servers");
+program
+  .command("env-new")
+  .action(() => {
+    console.clear();
+    Prompts.static.title();
+    envNew();
+  })
+  .description("prompt to create a new project and updates .latchrc.json");
+program
+  .command("list")
+  .action(() => {
+    Prompts.static.segue();
+    listEnvs();
+  })
+  .description("lists all projects in .latchrc.json");
+program
+  .command("review <project-alias>")
+  .action(alias => {
+    console.clear();
+    Prompts.static.title();
+    Prompts.static.lineBreak();
+    parseAlias(alias);
+  })
+  .description("shows all open PR's on the projects repo");
 
 program.parse(process.argv);
