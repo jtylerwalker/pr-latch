@@ -14,7 +14,6 @@ const {
 } = require("../lib/init");
 
 // TODO: options
-
 program.version("0.0.1");
 
 program
