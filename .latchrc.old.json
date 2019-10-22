@@ -1,4 +1,7 @@
 {
+  "githubToken": null,
+  "githubApi": "https://github.api.com",
+  "githubUserName": null,
   "mainDirectory": "/Users/employee/Code",
   "projects": {
     "edge": {

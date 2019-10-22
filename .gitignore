@@ -1,4 +1,5 @@
 pr-latch.env.json
 .latch.env.copy.json
+.latchrc.json
 .env
 node_modules
