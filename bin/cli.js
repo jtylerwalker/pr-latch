@@ -16,22 +16,26 @@ const {
 // TODO: options
 
 program.version("0.0.1");
-program.command("init").action(async () => {
-  const envPath = path.join(__dirname, "../.latchrc.json");
 
-  if (fs.existsSync(envPath)) {
-    Prompts.static.lineBreak();
-    console.log(`${chalk.cyan.bold("Env already initialized.")}`);
-    console.log(`${chalk.white.bold("You're ready to roll, Sugar Bear.\n")}`);
-    process.exit(1);
-  }
+program
+  .command("init")
+  .action(async () => {
+    const envPath = path.join(__dirname, "../.latchrc.json");
 
-  Prompts.static.title();
-  console.log(
-    `${chalk.white.bold(Prompts.static.quotes[1])} - ${Prompts.static.quotee}`
-  );
-  initializeEnv().then(() => process.exit(1));
-});
+    if (fs.existsSync(envPath)) {
+      Prompts.static.lineBreak();
+      console.log(`${chalk.cyan.bold("Env already initialized.")}`);
+      console.log(`${chalk.white.bold("You're ready to roll, Sugar Bear.\n")}`);
+      process.exit(1);
+    }
+
+    Prompts.static.title();
+    console.log(
+      `${chalk.white.bold(Prompts.static.quotes[1])} - ${Prompts.static.quotee}`
+    );
+    initializeEnv().then(() => process.exit(1));
+  })
+  .description("creates .latchrc.json with default values");
 program
   .command("env-up [project-aliases...]")
   .action(aliases => {
