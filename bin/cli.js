@@ -13,11 +13,9 @@ const {
   parseAlias
 } = require("../lib/init");
 
-// TODO: empty args list
 // TODO: options
 
 program.version("0.0.1");
-
 program.command("init").action(async () => {
   const envPath = path.join(__dirname, "../.latchrc.json");
 
@@ -76,3 +74,7 @@ program
   .description("shows all open PR's on the projects repo");
 
 program.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+  program.help(txt => txt);
+}
