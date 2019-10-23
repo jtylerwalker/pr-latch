@@ -1,5 +1,5 @@
 {
-  "name": "pr-latch",
+  "name": "prlatch",
   "version": "0.0.12",
   "description": "automate pr review workflow",
   "main": "src/main.js",
