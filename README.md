@@ -1,6 +1,6 @@
 # What is PR Latch?
 
-For brevity, Latch is a tool to help streamline the process of reviewing pull requests. In addition, it automates the process of starting up environments so you spend less time at the command-line and more time contributing.
+Latch is a tool to help streamline the process of reviewing pull requests. In addition, it automates the process of starting up environments so you spend less time at the command-line and more time contributing.
 
 ## Installation
 
@@ -35,17 +35,20 @@ The first time `env-new` is ran, you will be prompted for the `Main Project Dire
 
 There will be a prompt for an alias, which is a shorthand to start the project's PR review flow or server.
 
+Start command uses the command to start the project. E.g: `npm start`.
+
+Port is... well, it's the port.
+
 ```
 ? What is a good alias for this project? example-alias
 ...
-
+# Alias usage
 latch env-up example-alias
 latch review example-alias
+
+? Start command: npm [start | run dev | storybook | etc...]
+? What port does this project run on? 3030
 ```
-
-Start command uses the command to start the project. E.g: `npm start`.
-
-`port` is... well, it's the port.
 
 ### Running the Project Envs
 
@@ -63,7 +66,7 @@ latch env-down
 
 ### Review Flow
 
-`latch review <project-alias>` offers a selection of the current open pr's in the repo. Selecting an option will `fetch`, `checkout`, and `pull` the latest code changes. It will then open a browser to the view PR.
+`latch review <project-alias>` offers a selection of the current open pr's in the repo. Selecting an option will git fetch, checkout and pull the latest code changes for the given project. It will then open a browser to the view PR and defaults to opening the directory with VSCode.
 
 ## Where are the tests?!?
 
