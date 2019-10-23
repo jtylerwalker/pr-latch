@@ -13,7 +13,6 @@ const {
   parseAlias
 } = require("../lib/init");
 
-// TODO: options
 program.version("0.0.1");
 
 program
@@ -37,6 +36,7 @@ program
     });
   })
   .description("creates .latchrc.json with default values");
+
 program
   .command("env-up [project-aliases...]")
   .action(aliases => {
@@ -45,6 +45,7 @@ program
     envsUp(aliases);
   })
   .description("starts the server for each project alias stipulated");
+
 program
   .command("env-down")
   .action(() => {
@@ -53,6 +54,7 @@ program
     envsDown();
   })
   .description("stops all project servers");
+
 program
   .command("env-new")
   .action(() => {
@@ -61,12 +63,14 @@ program
     envNew();
   })
   .description("prompt to create a new project and updates .latchrc.json");
+
 program
   .command("list")
   .action(() => {
     listEnvs();
   })
   .description("lists all projects in .latchrc.json");
+
 program
   .command("review <project-alias>")
   .action(alias => {
