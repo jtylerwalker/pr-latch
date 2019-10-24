@@ -10,7 +10,7 @@ const {
   envsDown,
   envNew,
   listEnvs,
-  parseAlias
+  startGitFlowFromAlias
 } = require("../lib/init");
 
 const envPath = path.join(__dirname, "../.latchrc.json");
@@ -85,7 +85,7 @@ if (!fs.existsSync(envPath) && !process.argv.includes("init")) {
       console.clear();
       Prompts.static.title();
       Prompts.static.lineBreak();
-      parseAlias(alias);
+      startGitFlowFromAlias(alias);
     })
     .description("shows all open PR's on the projects repo");
 }
